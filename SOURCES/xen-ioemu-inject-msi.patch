@@ -1,3 +1,6 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: xen-ioemu-inject-msi.patch
+
 diff --git a/drivers/xen/Makefile b/drivers/xen/Makefile
 index 3e542f6..5d58370 100644
 --- a/drivers/xen/Makefile

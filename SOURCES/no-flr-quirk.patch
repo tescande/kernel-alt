@@ -1,4 +1,5 @@
-pci: Add a quirk for devices with broken FLR reset
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
+Subject: pci: Add a quirk for devices with broken FLR reset
 
 Some devices advertise FLReset+ but do not support it. Add a quirk for
 some devices to fallback to an alternate reset method.

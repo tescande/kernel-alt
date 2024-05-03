@@ -1,3 +1,6 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: pciback-mask-root-port-comp-timeout.patch
+
 diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
 index aa46452..05091913 100644
 --- a/drivers/xen/xen-pciback/pci_stub.c

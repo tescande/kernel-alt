@@ -1,4 +1,5 @@
-xen-pciback: Disable root port Fatal system error reporting by default
+From: Unknown Contributor <foo@bar.com>
+Subject: xen-pciback: Disable root port Fatal system error reporting by default
 
 Guests can potentially disable/cause the PCI device to stop responding at any
 time.

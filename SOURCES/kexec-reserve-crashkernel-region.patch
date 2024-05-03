@@ -1,4 +1,5 @@
-xen/setup: Reserve the crashkernel region
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
+Subject: xen/setup: Reserve the crashkernel region
 
 Reserve the crashkernel region in the E820. This prevents oustanding DMA
 operations overwriting the crashkernel region when the IOMMU is disabled

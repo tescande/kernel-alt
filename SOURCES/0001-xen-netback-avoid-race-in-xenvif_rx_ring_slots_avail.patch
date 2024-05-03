@@ -1,7 +1,9 @@
-From 4f809248860ae96b66921e1c9c528eb182fb35b9 Mon Sep 17 00:00:00 2001
+From a43b2bd835376d3bc58917cdf2a2c2923df28126 Mon Sep 17 00:00:00 2001
 From: Juergen Gross <jgross@suse.com>
 Date: Tue, 2 Feb 2021 08:09:38 +0100
 Subject: [PATCH] xen/netback: avoid race in xenvif_rx_ring_slots_available()
+Content-Type: text/plain; charset = "utf-8"
+Content-Transfert-Encoding: 8bit
 
 Since commit 23025393dbeb3b8b3 ("xen/netback: use lateeoi irq binding")
 xenvif_rx_ring_slots_available() is no longer called only from the rx
@@ -10,42 +12,54 @@ associated queue held.
 
 Reported-by: Igor Druzhinin <igor.druzhinin@citrix.com>
 Fixes: 23025393dbeb3b8b3 ("xen/netback: use lateeoi irq binding")
-Cc: stable@vger.kernel.org
 Signed-off-by: Juergen Gross <jgross@suse.com>
+Acked-by: Wei Liu <wl@xen.org>
+Link: https://lore.kernel.org/r/20210202070938.7863-1-jgross@suse.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 ---
- drivers/net/xen-netback/rx.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/xen-netback/rx.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/xen-netback/rx.c b/drivers/net/xen-netback/rx.c
-index 9b62f65..48e2006 100644
+index ab216970137c..ff1e63216b54 100644
 --- a/drivers/net/xen-netback/rx.c
 +++ b/drivers/net/xen-netback/rx.c
-@@ -38,10 +38,15 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
+@@ -59,17 +59,24 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
+ {
  	RING_IDX prod, cons;
- 	struct sk_buff *skb;
- 	int needed;
+ 	unsigned int needed;
 +	unsigned long flags;
 +
 +	spin_lock_irqsave(&queue->rx_queue.lock, flags);
  
- 	skb = skb_peek(&queue->rx_queue);
--	if (!skb)
-+	if (!skb) {
+ 	needed = READ_ONCE(queue->rx_slots_needed);
+-	if (!needed)
++	if (!needed) {
 +		spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
  		return false;
 +	}
  
- 	needed = DIV_ROUND_UP(skb->len, XEN_PAGE_SIZE);
- 	if (skb_is_gso(skb))
-@@ -49,6 +54,8 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
- 	if (skb->sw_hash)
- 		needed++;
- 
-+	spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
-+
  	do {
  		prod = queue->rx.sring->req_prod;
  		cons = queue->rx.req_cons;
+ 
+-		if (prod - cons >= needed)
++		if (prod - cons >= needed) {
++			spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
+ 			return true;
++		}
+ 
+ 		queue->rx.sring->req_event = prod + 1;
+ 
+@@ -79,6 +86,8 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
+ 		mb();
+ 	} while (queue->rx.sring->req_prod != prod);
+ 
++	spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
++
+ 	return false;
+ }
+ 
 -- 
-2.7.4
+2.43.0
 

@@ -1,4 +1,5 @@
-acpi_pm: Ignore when running under dom0
+From: Unknown Contributor <foo@bar.com>
+Subject: acpi_pm: Ignore when running under dom0
 
 dom0 detects the presence of the ACPI PM timer but cannot access it
 because Xen explicitly denies access. Keep it enabled in case it is

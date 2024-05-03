@@ -1,4 +1,5 @@
-gvt: Update VGPU type to match the one used by previous versions of XenServer
+From: Unknown Contributor <foo@bar.com>
+Subject: gvt: Update VGPU type to match the one used by previous versions of XenServer
 
 diff --git a/drivers/gpu/drm/i915/gvt/display.h b/drivers/gpu/drm/i915/gvt/display.h
 index ea7c1c525b8c..c029abe9955d 100644

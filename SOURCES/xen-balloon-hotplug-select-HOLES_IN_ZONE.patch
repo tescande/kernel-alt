@@ -1,3 +1,6 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: xen-balloon-hotplug-select-HOLES_IN_ZONE.patch
+
 diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
 index 73708ac..e283707 100644
 --- a/drivers/xen/Kconfig

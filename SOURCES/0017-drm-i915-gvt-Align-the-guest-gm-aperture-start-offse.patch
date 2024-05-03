@@ -16,10 +16,10 @@ Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
  2 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-index 9ad89e3..f7f0e96 100644
+index 66abe061f07b..1f989cf63d0c 100644
 --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
 +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -1198,8 +1198,7 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
+@@ -1208,8 +1208,7 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
  			sparse->header.version = 1;
  			sparse->nr_areas = nr_areas;
  			cap_type_id = VFIO_REGION_INFO_CAP_SPARSE_MMAP;
@@ -30,7 +30,7 @@ index 9ad89e3..f7f0e96 100644
  			break;
  
 diff --git a/drivers/gpu/drm/i915/gvt/vgpu.c b/drivers/gpu/drm/i915/gvt/vgpu.c
-index c628be0..fcccda3 100644
+index 9cf769f8ebb2..d65a9876f4f2 100644
 --- a/drivers/gpu/drm/i915/gvt/vgpu.c
 +++ b/drivers/gpu/drm/i915/gvt/vgpu.c
 @@ -48,8 +48,7 @@ void populate_pvinfo_page(struct intel_vgpu *vgpu)
@@ -43,7 +43,7 @@ index c628be0..fcccda3 100644
  	vgpu_vreg_t(vgpu, vgtif_reg(avail_rs.mappable_gmadr.size)) =
  		vgpu_aperture_sz(vgpu);
  	vgpu_vreg_t(vgpu, vgtif_reg(avail_rs.nonmappable_gmadr.base)) =
-@@ -524,6 +523,9 @@ void intel_gvt_reset_vgpu_locked(struct intel_vgpu *vgpu, bool dmlr,
+@@ -530,6 +529,9 @@ void intel_gvt_reset_vgpu_locked(struct intel_vgpu *vgpu, bool dmlr,
  {
  	struct intel_gvt *gvt = vgpu->gvt;
  	struct intel_gvt_workload_scheduler *scheduler = &gvt->scheduler;
@@ -53,7 +53,7 @@ index c628be0..fcccda3 100644
  	unsigned int resetting_eng = dmlr ? ALL_ENGINES : engine_mask;
  
  	gvt_dbg_core("------------------------------------------\n");
-@@ -556,6 +558,10 @@ void intel_gvt_reset_vgpu_locked(struct intel_vgpu *vgpu, bool dmlr,
+@@ -562,6 +564,10 @@ void intel_gvt_reset_vgpu_locked(struct intel_vgpu *vgpu, bool dmlr,
  
  		intel_vgpu_reset_mmio(vgpu, dmlr);
  		populate_pvinfo_page(vgpu);
@@ -61,9 +61,9 @@ index c628be0..fcccda3 100644
 +			maddr;
 +		vgpu_vreg_t(vgpu, vgtif_reg(avail_rs.nonmappable_gmadr.base)) =
 +			unmaddr;
- 		intel_vgpu_reset_display(vgpu);
  
  		if (dmlr) {
+ 			intel_vgpu_reset_display(vgpu);
 -- 
 2.7.4
 

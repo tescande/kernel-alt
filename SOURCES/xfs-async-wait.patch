@@ -1,4 +1,5 @@
-xfs: Avoid deadlock when backed by tapdisk
+From: Unknown Contributor <foo@bar.com>
+Subject: xfs: Avoid deadlock when backed by tapdisk
 
 pvsproxy uses an XFS filesystem on top of a blktap device backed by
 tapdisk on top of LVM/EXT3. This can deadlock in two ways:

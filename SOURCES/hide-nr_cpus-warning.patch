@@ -1,4 +1,5 @@
-x86/apic: Hide NR_CPUS limit warning
+From: Unknown Contributor <foo@bar.com>
+Subject: x86/apic: Hide NR_CPUS limit warning
 
 If the host has more CPUs than the kernel is compiled for, warnings
 appear in the kernel log. This doesn't make sense for dom0 because the

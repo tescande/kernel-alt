@@ -1,4 +1,5 @@
-Revert "PCI: Probe for device reset support during enumeration"
+From: Unknown Contributor <foo@bar.com>
+Subject: Revert "PCI: Probe for device reset support during enumeration"
 
 This reverts commit 5b0764cac9f1b70a6704b0e546be67c24cc05517.
 

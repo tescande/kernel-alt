@@ -27,10 +27,10 @@ Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
  2 files changed, 60 insertions(+), 56 deletions(-)
 
 diff --git a/drivers/gpu/drm/i915/gvt/gtt.c b/drivers/gpu/drm/i915/gvt/gtt.c
-index 3029bc3..05a6849 100644
+index 5ce22f3849b5..ad1331872d80 100644
 --- a/drivers/gpu/drm/i915/gvt/gtt.c
 +++ b/drivers/gpu/drm/i915/gvt/gtt.c
-@@ -1905,7 +1905,6 @@ static struct intel_vgpu_mm *intel_vgpu_create_ggtt_mm(struct intel_vgpu *vgpu)
+@@ -1918,7 +1918,6 @@ static struct intel_vgpu_mm *intel_vgpu_create_ggtt_mm(struct intel_vgpu *vgpu)
  		vgpu_free_mm(mm);
  		return ERR_PTR(-ENOMEM);
  	}
@@ -38,7 +38,7 @@ index 3029bc3..05a6849 100644
  
  	return mm;
  }
-@@ -1930,7 +1929,6 @@ void _intel_vgpu_mm_release(struct kref *mm_ref)
+@@ -1947,7 +1946,6 @@ void _intel_vgpu_mm_release(struct kref *mm_ref)
  		invalidate_ppgtt_mm(mm);
  	} else {
  		vfree(mm->ggtt_mm.virtual_ggtt);
@@ -46,8 +46,8 @@ index 3029bc3..05a6849 100644
  	}
  
  	vgpu_free_mm(mm);
-@@ -2169,6 +2167,8 @@ static int emulate_ggtt_mmio_write(struct intel_vgpu *vgpu, unsigned int off,
- 	struct intel_gvt_gtt_entry e, m;
+@@ -2192,6 +2190,8 @@ static int emulate_ggtt_mmio_write(struct intel_vgpu *vgpu, unsigned int off,
+ 	struct intel_gvt_gtt_entry m = {.val64 = 0, .type = GTT_TYPE_GGTT_PTE};
  	dma_addr_t dma_addr;
  	int ret;
 +	struct intel_gvt_partial_pte *partial_pte, *pos, *n;
@@ -55,7 +55,7 @@ index 3029bc3..05a6849 100644
  
  	if (bytes != 4 && bytes != 8)
  		return -EINVAL;
-@@ -2177,68 +2177,57 @@ static int emulate_ggtt_mmio_write(struct intel_vgpu *vgpu, unsigned int off,
+@@ -2200,68 +2200,57 @@ static int emulate_ggtt_mmio_write(struct intel_vgpu *vgpu, unsigned int off,
  	if (intel_gvt_ggtt_index_g2h(vgpu, g_gtt_index, &h_gtt_index))
  		return 0;
  
@@ -163,9 +163,9 @@ index 3029bc3..05a6849 100644
 -	if (ops->test_present(&e)) {
 +	if (!partial_update && (ops->test_present(&e))) {
  		gfn = ops->get_pfn(&e);
- 		m = e;
- 
-@@ -2431,6 +2420,8 @@ int intel_vgpu_init_gtt(struct intel_vgpu *vgpu)
+ 		m.val64 = e.val64;
+ 		m.type = e.type;
+@@ -2455,6 +2444,8 @@ int intel_vgpu_init_gtt(struct intel_vgpu *vgpu)
  
  	intel_vgpu_reset_ggtt(vgpu, false);
  
@@ -174,7 +174,7 @@ index 3029bc3..05a6849 100644
  	return create_scratch_page_tree(vgpu);
  }
  
-@@ -2455,6 +2446,14 @@ static void intel_vgpu_destroy_all_ppgtt_mm(struct intel_vgpu *vgpu)
+@@ -2479,6 +2470,14 @@ static void intel_vgpu_destroy_all_ppgtt_mm(struct intel_vgpu *vgpu)
  
  static void intel_vgpu_destroy_ggtt_mm(struct intel_vgpu *vgpu)
  {
@@ -190,10 +190,10 @@ index 3029bc3..05a6849 100644
  	vgpu->gtt.ggtt_mm = NULL;
  }
 diff --git a/drivers/gpu/drm/i915/gvt/gtt.h b/drivers/gpu/drm/i915/gvt/gtt.h
-index 6496df4..7370976 100644
+index 210cb4ee3196..c755b8e4cb3d 100644
 --- a/drivers/gpu/drm/i915/gvt/gtt.h
 +++ b/drivers/gpu/drm/i915/gvt/gtt.h
-@@ -132,6 +132,12 @@ enum intel_gvt_mm_type {
+@@ -133,6 +133,12 @@ enum intel_gvt_mm_type {
  
  #define GVT_RING_CTX_NR_PDPS	GEN8_3LVL_PDPES
  
@@ -206,7 +206,7 @@ index 6496df4..7370976 100644
  struct intel_vgpu_mm {
  	enum intel_gvt_mm_type type;
  	struct intel_vgpu *vgpu;
-@@ -156,8 +162,7 @@ struct intel_vgpu_mm {
+@@ -157,8 +163,7 @@ struct intel_vgpu_mm {
  		} ppgtt_mm;
  		struct {
  			void *virtual_ggtt;

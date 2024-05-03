@@ -1,4 +1,5 @@
-CA-310995: Disable hung task warnings for the idle IO scheduling class
+From: Unknown Contributor <foo@bar.com>
+Subject: CA-310995: Disable hung task warnings for the idle IO scheduling class
 
 The CFQ IO scheduler has the concept of an idle IO scheduling class
 where requests are only scheduled when the disk is idle. However, there

@@ -1,3 +1,6 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: CP-13181-net-openvswitch-add-dropping-of-fip-and-lldp.patch
+
 diff --git a/net/openvswitch/vport-netdev.c b/net/openvswitch/vport-netdev.c
 index 76fcaf1..4c6cc71 100644
 --- a/net/openvswitch/vport-netdev.c

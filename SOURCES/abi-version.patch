@@ -1,16 +1,17 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: abi-version.patch
+
 diff --git a/Makefile b/Makefile
-index 36d9de4..1183f59 100644
+index 296db299ab39..981e15ff0e9b 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1,8 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
+@@ -2,7 +2,8 @@
  VERSION = 4
  PATCHLEVEL = 19
--SUBLEVEL = 19
+ SUBLEVEL = 311
 -EXTRAVERSION =
-+SUBLEVEL = 0
 +EXTRAVERSION = +1
-+STABLE_SUBLEVEL = 19
++STABLE_SUBLEVEL = 311
  NAME = "People's Front"
  
  # *DOCUMENTATION*

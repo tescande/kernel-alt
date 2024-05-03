@@ -1,3 +1,6 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: set-XENMEM_get_mfn_from_pfn-hypercall-number.patch
+
 diff --git a/include/xen/interface/memory.h b/include/xen/interface/memory.h
 index 786d240..d0090d5 100644
 --- a/include/xen/interface/memory.h

@@ -1,4 +1,5 @@
-CA-122004: Make idle_cpu return 0 if doing softirq work
+From: Unknown Contributor <foo@bar.com>
+Subject: CA-122004: Make idle_cpu return 0 if doing softirq work
 
 The current implementation of idle_cpu only considers tasks that might be in the CPU's runqueue. If there's nothing in the specified CPU's runqueue, it will return 1. But if the CPU is doing work in the softirq context, it is wrong for idle_cpu to return 1.
 

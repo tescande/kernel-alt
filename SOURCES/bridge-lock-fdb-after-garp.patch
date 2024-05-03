@@ -1,5 +1,8 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: bridge-lock-fdb-after-garp.patch
+
 diff --git a/net/bridge/br_fdb.c b/net/bridge/br_fdb.c
-index 8034ce9..ffda192 100644
+index eff9d28d37ca..06bbe29ad97b 100644
 --- a/net/bridge/br_fdb.c
 +++ b/net/bridge/br_fdb.c
 @@ -12,6 +12,7 @@
@@ -189,10 +192,10 @@ index 8034ce9..ffda192 100644
  			err = -ENOMEM;
  			goto err_unlock;
 diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
-index 7207427..2b24c5e 100644
+index f3938337ff87..9f1d3db23d99 100644
 --- a/net/bridge/br_input.c
 +++ b/net/bridge/br_input.c
-@@ -94,7 +94,8 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
+@@ -100,7 +100,8 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
  	/* insert into forwarding database after filtering to avoid spoofing */
  	br = p->br;
  	if (p->flags & BR_LEARNING)
@@ -201,8 +204,8 @@ index 7207427..2b24c5e 100644
 +			goto drop;
  
  	local_rcv = !!(br->dev->flags & IFF_PROMISC);
- 	dest = eth_hdr(skb)->h_dest;
-@@ -182,22 +183,30 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
+ 	if (is_multicast_ether_addr(eth_hdr(skb)->h_dest)) {
+@@ -187,20 +188,29 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
  }
  EXPORT_SYMBOL_GPL(br_handle_frame_finish);
  
@@ -225,20 +228,19 @@ index 7207427..2b24c5e 100644
  /* note: already called with rcu_read_lock */
  static int br_handle_local_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
  {
- 	struct net_bridge_port *p = br_port_get_rcu(skb->dev);
-+	int rc;
- 
 -	__br_handle_local_finish(skb);
++	int rc;
++
 +	rc = __br_handle_local_finish(skb);
 +	if (rc) {
 +		kfree_skb(skb);
 +		return rc;
 +	}
  
- 	BR_INPUT_SKB_CB(skb)->brdev = p->br->dev;
- 	br_pass_frame_up(skb);
+ 	/* return 1 to signal the okfn() was called so it's ok to use the skb */
+ 	return 1;
 diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 1fdfb06..106b13a 100644
+index 152846b28692..1e9ccf5b9829 100644
 --- a/net/bridge/br_private.h
 +++ b/net/bridge/br_private.h
 @@ -185,6 +185,8 @@ struct net_bridge_fdb_entry {

@@ -1,3 +1,6 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: default-xen-swiotlb-size-128MiB.patch
+
 diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
 index 92cc199..729111f 100644
 --- a/drivers/xen/swiotlb-xen.c

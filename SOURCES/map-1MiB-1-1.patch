@@ -1,3 +1,6 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: map-1MiB-1-1.patch
+
 diff --git a/arch/x86/xen/setup.c b/arch/x86/xen/setup.c
 index a5bf7c4..743d4f6 100644
 --- a/arch/x86/xen/setup.c

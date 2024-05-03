@@ -1,3 +1,6 @@
+From: Unknown Contributor <foo@bar.com>
+Subject: xengt-i915-gem-vgtbuffer.patch
+
 diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
 index 5794f10..07a619c 100644
 --- a/drivers/gpu/drm/i915/Makefile

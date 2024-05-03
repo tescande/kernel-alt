@@ -1,4 +1,5 @@
-tg3: Use __GFP_RETRY_MAYFAIL when performing large order allocations
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
+Subject: tg3: Use __GFP_RETRY_MAYFAIL when performing large order allocations
 
 Several order 4 & 5 allocations are required when setting up the
 interface. These may fail if the interface is reconfigured some time
