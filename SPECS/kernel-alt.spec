@@ -1,4 +1,4 @@
-%define uname 4.19.316
+%define uname 4.19.316+1
 %define short_uname 4.19
 %define base_version 4.19.316
 %define srcpath /usr/src/kernels/%{uname}-%{_arch}
