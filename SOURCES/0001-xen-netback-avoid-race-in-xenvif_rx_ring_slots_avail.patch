@@ -16,39 +16,49 @@ Acked-by: Wei Liu <wl@xen.org>
 Link: https://lore.kernel.org/r/20210202070938.7863-1-jgross@suse.com
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 ---
- drivers/net/xen-netback/rx.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/xen-netback/rx.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/xen-netback/rx.c b/drivers/net/xen-netback/rx.c
-index b8febe1..accc991 100644
+index ab216970137c..ff1e63216b54 100644
 --- a/drivers/net/xen-netback/rx.c
 +++ b/drivers/net/xen-netback/rx.c
-@@ -38,10 +38,15 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
+@@ -59,17 +59,24 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
+ {
  	RING_IDX prod, cons;
- 	struct sk_buff *skb;
- 	int needed;
+ 	unsigned int needed;
 +	unsigned long flags;
 +
 +	spin_lock_irqsave(&queue->rx_queue.lock, flags);
  
- 	skb = skb_peek(&queue->rx_queue);
--	if (!skb)
-+	if (!skb) {
+ 	needed = READ_ONCE(queue->rx_slots_needed);
+-	if (!needed)
++	if (!needed) {
 +		spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
  		return false;
 +	}
  
- 	needed = DIV_ROUND_UP(skb->len, XEN_PAGE_SIZE);
- 	if (skb_is_gso(skb))
-@@ -49,6 +54,8 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
- 	if (skb->sw_hash)
- 		needed++;
- 
-+	spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
-+
  	do {
  		prod = queue->rx.sring->req_prod;
  		cons = queue->rx.req_cons;
+ 
+-		if (prod - cons >= needed)
++		if (prod - cons >= needed) {
++			spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
+ 			return true;
++		}
+ 
+ 		queue->rx.sring->req_event = prod + 1;
+ 
+@@ -79,6 +86,8 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
+ 		mb();
+ 	} while (queue->rx.sring->req_prod != prod);
+ 
++	spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
++
+ 	return false;
+ }
+ 
 -- 
 2.7.4
 

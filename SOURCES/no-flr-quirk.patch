@@ -11,10 +11,10 @@ Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
  2 files changed, 14 insertions(+)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ec2911c..a82ebfd 100644
+index bb5182089096..5e36f1838441 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -3387,6 +3387,18 @@ static void quirk_no_pm_reset(struct pci_dev *dev)
+@@ -3535,6 +3535,18 @@ static void quirk_no_pm_reset(struct pci_dev *dev)
  DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
  			       PCI_CLASS_DISPLAY_VGA, 8, quirk_no_pm_reset);
  
@@ -31,13 +31,13 @@ index ec2911c..a82ebfd 100644
 +			       PCI_CLASS_STORAGE_SAS, 8, quirk_no_flr_reset);
 +
  /*
-  * Thunderbolt controllers with broken MSI hotplug signaling:
-  * Entire 1st generation (Light Ridge, Eagle Ridge, Light Peak) and part
+  * Spectrum-{1,2,3,4} devices report that a D3hot->D0 transition causes a reset
+  * (i.e., they advertise NoSoftRst-). However, this transition does not have
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index ab20dc5..6c552cb 100644
+index 3ac7b92b35b9..d7c5b837a275 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
-@@ -216,6 +216,8 @@
+@@ -227,6 +227,8 @@
  #define PCI_DEVICE_ID_LSI_SAS1066E	0x005A
  #define PCI_DEVICE_ID_LSI_SAS1068E	0x0058
  #define PCI_DEVICE_ID_LSI_SAS1078	0x0060

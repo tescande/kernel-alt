@@ -41,11 +41,11 @@ Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 Link: https://lore.kernel.org/r/20211020073959.2679255-1-yebin10@huawei.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index a0e34628e181..cc1ae2bac822 100644
+index 5a07964a1e67..9155cf92ec45 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -108,8 +108,9 @@ struct nbd_device {
- 	struct gendisk *disk;
+@@ -109,8 +109,9 @@ struct nbd_device {
+ 	struct workqueue_struct *recv_workq;
  
  	struct list_head list;
 -	struct task_struct *task_recv;
@@ -55,7 +55,7 @@ index a0e34628e181..cc1ae2bac822 100644
  };
  
  #define NBD_CMD_REQUEUED	1
-@@ -197,7 +198,7 @@ static ssize_t pid_show(struct device *dev,
+@@ -199,7 +200,7 @@ static ssize_t pid_show(struct device *dev,
  	struct gendisk *disk = dev_to_disk(dev);
  	struct nbd_device *nbd = (struct nbd_device *)disk->private_data;
  
@@ -64,16 +64,16 @@ index a0e34628e181..cc1ae2bac822 100644
  }
  
  static const struct device_attribute pid_attr = {
-@@ -304,7 +305,7 @@ static void nbd_size_set(struct nbd_device *nbd, loff_t blocksize,
+@@ -307,7 +308,7 @@ static void nbd_size_set(struct nbd_device *nbd, loff_t blocksize,
  	struct nbd_config *config = nbd->config;
  	config->blksize = blocksize;
  	config->bytesize = blocksize * nr_blocks;
 -	if (nbd->task_recv != NULL)
 +	if (!nbd->pid)
- 		nbd_size_update(nbd);
+ 		nbd_size_update(nbd, false);
  }
  
-@@ -1113,7 +1114,7 @@ static void nbd_config_put(struct nbd_device *nbd)
+@@ -1158,7 +1159,7 @@ static void nbd_config_put(struct nbd_device *nbd)
  		if (test_and_clear_bit(NBD_HAS_PID_FILE,
  				       &config->runtime_flags))
  			device_remove_file(disk_to_dev(nbd->disk), &pid_attr);
@@ -82,7 +82,7 @@ index a0e34628e181..cc1ae2bac822 100644
  		nbd_clear_sock(nbd);
  		if (config->num_connections) {
  			int i;
-@@ -1144,7 +1145,7 @@ static int nbd_start_device(struct nbd_device *nbd)
+@@ -1193,7 +1194,7 @@ static int nbd_start_device(struct nbd_device *nbd)
  	int num_connections = config->num_connections;
  	int error = 0, i;
  
@@ -91,7 +91,7 @@ index a0e34628e181..cc1ae2bac822 100644
  		return -EBUSY;
  	if (!config->socks)
  		return -EINVAL;
-@@ -1155,7 +1156,7 @@ static int nbd_start_device(struct nbd_device *nbd)
+@@ -1212,7 +1213,7 @@ static int nbd_start_device(struct nbd_device *nbd)
  	}
  
  	blk_mq_update_nr_hw_queues(&nbd->tag_set, config->num_connections);
@@ -100,7 +100,7 @@ index a0e34628e181..cc1ae2bac822 100644
  
  	nbd_parse_flags(nbd);
  
-@@ -1398,8 +1399,8 @@ static int nbd_dbg_tasks_show(struct seq_file *s, void *unused)
+@@ -1485,8 +1486,8 @@ static int nbd_dbg_tasks_show(struct seq_file *s, void *unused)
  {
  	struct nbd_device *nbd = s->private;
  
@@ -111,7 +111,7 @@ index a0e34628e181..cc1ae2bac822 100644
  
  	return 0;
  }
-@@ -1920,7 +1921,7 @@ static int nbd_genl_reconfigure(struct sk_buff *skb, struct genl_info *info)
+@@ -2021,7 +2022,7 @@ static int nbd_genl_reconfigure(struct sk_buff *skb, struct genl_info *info)
  	mutex_lock(&nbd->config_lock);
  	config = nbd->config;
  	if (!test_bit(NBD_BOUND, &config->runtime_flags) ||

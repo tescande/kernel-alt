@@ -1,5 +1,5 @@
 diff --git a/drivers/net/bonding/bond_alb.c b/drivers/net/bonding/bond_alb.c
-index e82108c..4f99948 100644
+index 5947c1305527..2dc22bd129b8 100644
 --- a/drivers/net/bonding/bond_alb.c
 +++ b/drivers/net/bonding/bond_alb.c
 @@ -31,6 +31,7 @@
@@ -10,7 +10,7 @@ index e82108c..4f99948 100644
  #include <linux/if_vlan.h>
  #include <linux/in.h>
  #include <net/ipx.h>
-@@ -74,6 +75,7 @@ static inline struct arp_pkt *arp_pkt(const struct sk_buff *skb)
+@@ -69,6 +70,7 @@ struct arp_pkt {
  /* Forward declaration */
  static void alb_send_learning_packets(struct slave *slave, u8 mac_addr[],
  				      bool strict_match);
@@ -18,7 +18,7 @@ index e82108c..4f99948 100644
  static void rlb_purge_src_ip(struct bonding *bond, struct arp_pkt *arp);
  static void rlb_src_unlink(struct bonding *bond, u32 index);
  static void rlb_src_link(struct bonding *bond, u32 ip_src_hash,
-@@ -260,6 +262,51 @@ static struct slave *tlb_choose_channel(struct bonding *bond, u32 hash_index,
+@@ -255,6 +257,51 @@ static struct slave *tlb_choose_channel(struct bonding *bond, u32 hash_index,
  	return tx_slave;
  }
  
@@ -70,7 +70,7 @@ index e82108c..4f99948 100644
  /*********************** rlb specific functions ***************************/
  
  /* when an ARP REPLY is received from a client update its info
-@@ -1070,7 +1117,8 @@ static void alb_fasten_mac_swap(struct bonding *bond, struct slave *slave1,
+@@ -1071,7 +1118,8 @@ static void alb_fasten_mac_swap(struct bonding *bond, struct slave *slave1,
  
  	/* fasten the change in the switch */
  	if (bond_slave_can_tx(slave1)) {
@@ -80,7 +80,7 @@ index e82108c..4f99948 100644
  		if (bond->alb_info.rlb_enabled) {
  			/* inform the clients that the mac address
  			 * has changed
-@@ -1082,7 +1130,8 @@ static void alb_fasten_mac_swap(struct bonding *bond, struct slave *slave1,
+@@ -1083,7 +1131,8 @@ static void alb_fasten_mac_swap(struct bonding *bond, struct slave *slave1,
  	}
  
  	if (bond_slave_can_tx(slave2)) {
@@ -90,7 +90,7 @@ index e82108c..4f99948 100644
  		if (bond->alb_info.rlb_enabled) {
  			/* inform the clients that the mac address
  			 * has changed
-@@ -1242,7 +1291,7 @@ static int alb_set_mac_address(struct bonding *bond, void *addr)
+@@ -1243,7 +1292,7 @@ static int alb_set_mac_address(struct bonding *bond, void *addr)
  	char tmp_addr[MAX_ADDR_LEN];
  	int res;
  
@@ -99,7 +99,7 @@ index e82108c..4f99948 100644
  		return 0;
  
  	bond_for_each_slave(bond, slave, iter) {
-@@ -1283,7 +1332,7 @@ static int alb_set_mac_address(struct bonding *bond, void *addr)
+@@ -1284,7 +1333,7 @@ static int alb_set_mac_address(struct bonding *bond, void *addr)
  
  /************************ exported alb funcions ************************/
  
@@ -108,7 +108,7 @@ index e82108c..4f99948 100644
  {
  	int res;
  
-@@ -1291,15 +1340,23 @@ int bond_alb_initialize(struct bonding *bond, int rlb_enabled)
+@@ -1292,15 +1341,23 @@ int bond_alb_initialize(struct bonding *bond, int rlb_enabled)
  	if (res)
  		return res;
  
@@ -118,12 +118,13 @@ index e82108c..4f99948 100644
 +
 +	switch (mode) {
 +	case BOND_MODE_ALB:
- 		bond->alb_info.rlb_enabled = 1;
++		bond->alb_info.rlb_enabled = 1;
  		res = rlb_initialize(bond);
  		if (res) {
  			tlb_deinitialize(bond);
  			return res;
  		}
+-		bond->alb_info.rlb_enabled = 1;
 -	} else {
 -		bond->alb_info.rlb_enabled = 0;
 +		break;
@@ -135,7 +136,7 @@ index e82108c..4f99948 100644
  	}
  
  	return 0;
-@@ -1329,7 +1386,8 @@ static netdev_tx_t bond_do_alb_xmit(struct sk_buff *skb, struct bonding *bond,
+@@ -1330,7 +1387,8 @@ static netdev_tx_t bond_do_alb_xmit(struct sk_buff *skb, struct bonding *bond,
  	}
  
  	if (tx_slave && bond_slave_can_tx(tx_slave)) {
@@ -155,9 +156,9 @@ index e82108c..4f99948 100644
 +		hash_size = ETH_ALEN;
 +	} else switch (ntohs(skb->protocol)) {
  	case ETH_P_IP: {
- 		const struct iphdr *iph = ip_hdr(skb);
+ 		const struct iphdr *iph;
  
-@@ -1501,6 +1562,7 @@ netdev_tx_t bond_alb_xmit(struct sk_buff *skb, struct net_device *bond_dev)
+@@ -1522,6 +1583,7 @@ netdev_tx_t bond_alb_xmit(struct sk_buff *skb, struct net_device *bond_dev)
  	return bond_do_alb_xmit(skb, bond, tx_slave);
  }
  
@@ -165,7 +166,7 @@ index e82108c..4f99948 100644
  void bond_alb_monitor(struct work_struct *work)
  {
  	struct bonding *bond = container_of(work, struct bonding,
-@@ -1521,7 +1583,8 @@ void bond_alb_monitor(struct work_struct *work)
+@@ -1542,7 +1604,8 @@ void bond_alb_monitor(struct work_struct *work)
  	bond_info->lp_counter++;
  
  	/* send learning packets */
@@ -175,7 +176,7 @@ index e82108c..4f99948 100644
  		bool strict_match;
  
  		bond_for_each_slave_rcu(bond, slave, iter) {
-@@ -1607,14 +1670,17 @@ int bond_alb_init_slave(struct bonding *bond, struct slave *slave)
+@@ -1628,14 +1691,17 @@ int bond_alb_init_slave(struct bonding *bond, struct slave *slave)
  {
  	int res;
  
@@ -200,7 +201,7 @@ index e82108c..4f99948 100644
  
  	tlb_init_slave(slave);
  
-@@ -1634,7 +1700,7 @@ int bond_alb_init_slave(struct bonding *bond, struct slave *slave)
+@@ -1656,7 +1722,7 @@ int bond_alb_init_slave(struct bonding *bond, struct slave *slave)
   */
  void bond_alb_deinit_slave(struct bonding *bond, struct slave *slave)
  {
@@ -209,7 +210,7 @@ index e82108c..4f99948 100644
  		alb_change_hw_addr_on_detach(bond, slave);
  
  	tlb_clear_slave(bond, slave, 0);
-@@ -1654,6 +1720,15 @@ void bond_alb_handle_link_change(struct bonding *bond, struct slave *slave, char
+@@ -1676,6 +1742,15 @@ void bond_alb_handle_link_change(struct bonding *bond, struct slave *slave, char
  		tlb_clear_slave(bond, slave, 0);
  		if (bond->alb_info.rlb_enabled)
  			rlb_clear_slave(bond, slave);
@@ -224,8 +225,8 @@ index e82108c..4f99948 100644
 +		}
  	} else if (link == BOND_LINK_UP) {
  		/* order a rebalance ASAP */
- 		bond_info->tx_rebalance_counter = BOND_TLB_REBALANCE_TICKS;
-@@ -1701,7 +1776,7 @@ void bond_alb_handle_active_change(struct bonding *bond, struct slave *new_slave
+ 		atomic_set(&bond_info->tx_rebalance_counter,
+@@ -1724,7 +1799,7 @@ void bond_alb_handle_active_change(struct bonding *bond, struct slave *new_slave
  	swap_slave = curr_active;
  	rcu_assign_pointer(bond->curr_active_slave, new_slave);
  
@@ -234,7 +235,7 @@ index e82108c..4f99948 100644
  		return;
  
  	/* set the new curr_active_slave to the bonds mac address
-@@ -1775,7 +1850,7 @@ int bond_alb_set_mac_address(struct net_device *bond_dev, void *addr)
+@@ -1798,7 +1873,7 @@ int bond_alb_set_mac_address(struct net_device *bond_dev, void *addr)
  	 * duplications.
  	 */
  	curr_active = rtnl_dereference(bond->curr_active_slave);
@@ -244,10 +245,10 @@ index e82108c..4f99948 100644
  
  	swap_slave = bond_slave_has_mac(bond, bond_dev->dev_addr);
 diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index ee28ec9..c9fa21d 100644
+index 79b36f1c50ae..6c41ea1e864b 100644
 --- a/drivers/net/bonding/bond_main.c
 +++ b/drivers/net/bonding/bond_main.c
-@@ -137,7 +137,7 @@
+@@ -137,7 +137,7 @@ module_param(mode, charp, 0);
  MODULE_PARM_DESC(mode, "Mode of operation; 0 for balance-rr, "
  		       "1 for active-backup, 2 for balance-xor, "
  		       "3 for broadcast, 4 for 802.3ad, 5 for balance-tlb, "
@@ -301,7 +302,7 @@ index ee28ec9..c9fa21d 100644
  
  		if (bond->dev->flags & IFF_ALLMULTI)
  			dev_set_allmulti(new_active->dev, 1);
-@@ -1135,7 +1140,8 @@ static bool bond_should_deliver_exact_match(struct sk_buff *skb,
+@@ -1143,7 +1148,8 @@ static bool bond_should_deliver_exact_match(struct sk_buff *skb,
  					    struct bonding *bond)
  {
  	if (bond_is_slave_inactive(slave)) {
@@ -311,7 +312,7 @@ index ee28ec9..c9fa21d 100644
  		    skb->pkt_type != PACKET_BROADCAST &&
  		    skb->pkt_type != PACKET_MULTICAST)
  			return false;
-@@ -1667,6 +1673,7 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+@@ -1693,6 +1699,7 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
  		break;
  	case BOND_MODE_TLB:
  	case BOND_MODE_ALB:
@@ -319,7 +320,7 @@ index ee28ec9..c9fa21d 100644
  		bond_set_active_slave(new_slave);
  		bond_set_slave_inactive_flags(new_slave, BOND_SLAVE_NOTIFY_NOW);
  		break;
-@@ -3349,7 +3356,7 @@ static int bond_open(struct net_device *bond_dev)
+@@ -3412,7 +3419,7 @@ static int bond_open(struct net_device *bond_dev)
  		/* bond_alb_initialize must be called before the timer
  		 * is started.
  		 */
@@ -328,7 +329,7 @@ index ee28ec9..c9fa21d 100644
  			return -ENOMEM;
  		if (bond->params.tlb_dynamic_lb || BOND_MODE(bond) == BOND_MODE_ALB)
  			queue_delayed_work(bond->wq, &bond->alb_work, 0);
-@@ -4144,6 +4151,7 @@ static netdev_tx_t __bond_start_xmit(struct sk_buff *skb, struct net_device *dev
+@@ -4221,6 +4228,7 @@ static netdev_tx_t __bond_start_xmit(struct sk_buff *skb, struct net_device *dev
  	case BOND_MODE_BROADCAST:
  		return bond_xmit_broadcast(skb, dev);
  	case BOND_MODE_ALB:
@@ -336,7 +337,7 @@ index ee28ec9..c9fa21d 100644
  		return bond_alb_xmit(skb, dev);
  	case BOND_MODE_TLB:
  		return bond_tlb_xmit(skb, dev);
-@@ -4350,7 +4358,7 @@ static int bond_check_params(struct bond_params *params)
+@@ -4444,7 +4452,7 @@ static int bond_check_params(struct bond_params *params)
  	u16 ad_user_port_key = 0;
  	__be32 arp_target[BOND_MAX_ARP_TARGETS] = { 0 };
  	int arp_ip_count;
@@ -346,10 +347,10 @@ index ee28ec9..c9fa21d 100644
  	int lacp_fast = 0;
  	int tlb_dynamic_lb;
 diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
-index 4d5d01c..e604b29 100644
+index c9aa28eee191..1e0199618b14 100644
 --- a/drivers/net/bonding/bond_options.c
 +++ b/drivers/net/bonding/bond_options.c
-@@ -88,6 +88,7 @@ static int bond_option_ad_user_port_key_set(struct bonding *bond,
+@@ -88,6 +88,7 @@ static const struct bond_opt_value bond_mode_tbl[] = {
  	{ "802.3ad",       BOND_MODE_8023AD,       0},
  	{ "balance-tlb",   BOND_MODE_TLB,          0},
  	{ "balance-alb",   BOND_MODE_ALB,          0},
@@ -358,7 +359,7 @@ index 4d5d01c..e604b29 100644
  };
  
 diff --git a/drivers/net/bonding/bond_procfs.c b/drivers/net/bonding/bond_procfs.c
-index 9f7d83e..381fa6d 100644
+index 9f7d83e827c3..381fa6d39c2b 100644
 --- a/drivers/net/bonding/bond_procfs.c
 +++ b/drivers/net/bonding/bond_procfs.c
 @@ -162,6 +162,11 @@ static void bond_info_show_master(struct seq_file *seq)
@@ -384,10 +385,10 @@ index 9f7d83e..381fa6d 100644
  		const struct port *port = &SLAVE_AD_INFO(slave)->port;
  		const struct aggregator *agg = port->aggregator;
 diff --git a/include/linux/if_bridge.h b/include/linux/if_bridge.h
-index c20c7e1..1021708 100644
+index c20c7e197d07..102170844ada 100644
 --- a/include/linux/if_bridge.h
 +++ b/include/linux/if_bridge.h
-@@ -129,4 +129,6 @@ struct net_device *br_fdb_find_port(const struct net_device *br_dev,
+@@ -129,4 +129,6 @@ br_fdb_find_port(const struct net_device *br_dev,
  }
  #endif
  
@@ -395,12 +396,12 @@ index c20c7e1..1021708 100644
 +
  #endif
 diff --git a/include/net/bond_alb.h b/include/net/bond_alb.h
-index 313a8d3..d50d933 100644
+index 3a6c932b6dca..4021a03c9116 100644
 --- a/include/net/bond_alb.h
 +++ b/include/net/bond_alb.h
 @@ -144,6 +144,8 @@ struct alb_bond_info {
  	u32			unbalanced_load;
- 	int			tx_rebalance_counter;
+ 	atomic_t		tx_rebalance_counter;
  	int			lp_counter;
 +	/* -------- slb parameters -------- */
 +	int slb_enabled;
@@ -417,10 +418,10 @@ index 313a8d3..d50d933 100644
  int bond_alb_init_slave(struct bonding *bond, struct slave *slave);
  void bond_alb_deinit_slave(struct bonding *bond, struct slave *slave);
 diff --git a/include/net/bonding.h b/include/net/bonding.h
-index b46d68a..f156901 100644
+index 7d317434e3d1..0661ed1c0df5 100644
 --- a/include/net/bonding.h
 +++ b/include/net/bonding.h
-@@ -270,7 +270,8 @@ static inline bool bond_should_override_tx_queue(struct bonding *bond)
+@@ -274,7 +274,8 @@ static inline bool bond_should_override_tx_queue(struct bonding *bond)
  static inline bool bond_is_lb(const struct bonding *bond)
  {
  	return BOND_MODE(bond) == BOND_MODE_TLB ||
@@ -431,7 +432,7 @@ index b46d68a..f156901 100644
  
  static inline bool bond_needs_speed_duplex(const struct bonding *bond)
 diff --git a/include/uapi/linux/if_bonding.h b/include/uapi/linux/if_bonding.h
-index 61a1bf6..71e81bc 100644
+index 61a1bf6e865e..71e81bc0869e 100644
 --- a/include/uapi/linux/if_bonding.h
 +++ b/include/uapi/linux/if_bonding.h
 @@ -71,6 +71,7 @@
@@ -443,7 +444,7 @@ index 61a1bf6..71e81bc 100644
  /* each slave's link has 4 states */
  #define BOND_LINK_UP    0           /* link is up and running */
 diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-index e41eda3..b71fe74 100644
+index e41eda3c71f1..b71fe74ae386 100644
 --- a/include/uapi/linux/if_bridge.h
 +++ b/include/uapi/linux/if_bridge.h
 @@ -292,4 +292,10 @@ struct br_mcast_stats {
@@ -458,7 +459,7 @@ index e41eda3..b71fe74 100644
 +
  #endif /* _UAPI_LINUX_IF_BRIDGE_H */
 diff --git a/net/bridge/br_fdb.c b/net/bridge/br_fdb.c
-index 502f663..8034ce9 100644
+index 4d4b9b5ea1c1..eff9d28d37ca 100644
 --- a/net/bridge/br_fdb.c
 +++ b/net/bridge/br_fdb.c
 @@ -558,6 +558,71 @@ int br_fdb_insert(struct net_bridge *br, struct net_bridge_port *source,
@@ -534,7 +535,7 @@ index 502f663..8034ce9 100644
  		   const unsigned char *addr, u16 vid, bool added_by_user)
  {
 diff --git a/net/bridge/br_if.c b/net/bridge/br_if.c
-index 0363f1b..21e697e 100644
+index ab539551b7d3..583a81726616 100644
 --- a/net/bridge/br_if.c
 +++ b/net/bridge/br_if.c
 @@ -13,6 +13,7 @@
@@ -545,7 +546,7 @@ index 0363f1b..21e697e 100644
  #include <linux/etherdevice.h>
  #include <linux/netpoll.h>
  #include <linux/ethtool.h>
-@@ -444,6 +445,148 @@ static struct net_bridge_port *new_nbp(struct net_bridge *br,
+@@ -445,6 +446,148 @@ static struct net_bridge_port *new_nbp(struct net_bridge *br,
  	return p;
  }
  
@@ -694,7 +695,7 @@ index 0363f1b..21e697e 100644
  int br_add_bridge(struct net *net, const char *name)
  {
  	struct net_device *dev;
-@@ -711,6 +854,9 @@ int br_del_if(struct net_bridge *br, struct net_device *dev)
+@@ -728,6 +871,9 @@ int br_del_if(struct net_bridge *br, struct net_device *dev)
  	if (!p || p->br != br)
  		return -EINVAL;
  
@@ -705,7 +706,7 @@ index 0363f1b..21e697e 100644
  	 * there still maybe an alternate path for netconsole to use;
  	 * therefore there is no reason for a NETDEV_RELEASE event.
 diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 11ed202..1fdfb06 100644
+index 7ca3b469242e..152846b28692 100644
 --- a/net/bridge/br_private.h
 +++ b/net/bridge/br_private.h
 @@ -314,6 +314,7 @@ struct net_bridge {

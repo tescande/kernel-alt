@@ -15,11 +15,11 @@ Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-index 9c5f7c9..2b865c6 100644
+index 0b3f4538c1d4..78cf5b32bca6 100644
 --- a/drivers/scsi/libfc/fc_disc.c
 +++ b/drivers/scsi/libfc/fc_disc.c
-@@ -628,6 +628,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 	}
+@@ -646,6 +646,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 	fc_frame_free(fp);
  out:
  	kref_put(&rdata->kref, fc_rport_destroy);
 +	if (!IS_ERR(fp))

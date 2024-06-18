@@ -28,10 +28,10 @@ Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 Reviewed-by: Chao Leng <lengchao@huawei.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index e5bddae16ed4..a70a8c02c9d1 100644
+index 6adff541282b..32dad5d7db5b 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -126,6 +126,38 @@ static void nvme_queue_scan(struct nvme_ctrl *ctrl)
+@@ -129,6 +129,38 @@ static void nvme_queue_scan(struct nvme_ctrl *ctrl)
  		queue_work(nvme_wq, &ctrl->scan_work);
  }
  
@@ -89,7 +89,7 @@ index e5bddae16ed4..a70a8c02c9d1 100644
  	return changed;
  }
  EXPORT_SYMBOL_GPL(nvme_change_ctrl_state);
-@@ -3473,6 +3514,7 @@ void nvme_stop_ctrl(struct nvme_ctrl *ctrl)
+@@ -3594,6 +3635,7 @@ void nvme_stop_ctrl(struct nvme_ctrl *ctrl)
  {
  	nvme_mpath_stop(ctrl);
  	nvme_stop_keep_alive(ctrl);
@@ -97,15 +97,15 @@ index e5bddae16ed4..a70a8c02c9d1 100644
  	flush_work(&ctrl->async_event_work);
  	cancel_work_sync(&ctrl->fw_act_work);
  	if (ctrl->ops->stop_ctrl)
-@@ -3534,6 +3576,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
+@@ -3658,6 +3700,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
  	int ret;
  
  	ctrl->state = NVME_CTRL_NEW;
 +	clear_bit(NVME_CTRL_FAILFAST_EXPIRED, &ctrl->flags);
  	spin_lock_init(&ctrl->lock);
+ 	mutex_init(&ctrl->scan_lock);
  	INIT_LIST_HEAD(&ctrl->namespaces);
- 	init_rwsem(&ctrl->namespaces_rwsem);
-@@ -3546,6 +3589,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
+@@ -3671,6 +3714,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
  	INIT_WORK(&ctrl->delete_work, nvme_delete_ctrl_work);
  
  	INIT_DELAYED_WORK(&ctrl->ka_work, nvme_keep_alive_work);
@@ -114,10 +114,10 @@ index e5bddae16ed4..a70a8c02c9d1 100644
  	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
  
 diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
-index bcd09d3a44da..2f256f32f38e 100644
+index 3ae800e87999..19c2b9f7d823 100644
 --- a/drivers/nvme/host/fabrics.c
 +++ b/drivers/nvme/host/fabrics.c
-@@ -550,6 +550,7 @@ blk_status_t nvmf_fail_nonready_command(struct nvme_ctrl *ctrl,
+@@ -555,6 +555,7 @@ blk_status_t nvmf_fail_nonready_command(struct nvme_ctrl *ctrl,
  {
  	if (ctrl->state != NVME_CTRL_DELETING &&
  	    ctrl->state != NVME_CTRL_DEAD &&
@@ -125,7 +125,7 @@ index bcd09d3a44da..2f256f32f38e 100644
  	    !blk_noretry_request(rq) && !(rq->cmd_flags & REQ_NVME_MPATH))
  		return BLK_STS_RESOURCE;
  
-@@ -607,6 +608,7 @@ static const match_table_t opt_tokens = {
+@@ -611,6 +612,7 @@ static const match_table_t opt_tokens = {
  	{ NVMF_OPT_HOST_TRADDR,		"host_traddr=%s"	},
  	{ NVMF_OPT_HOST_ID,		"hostid=%s"		},
  	{ NVMF_OPT_DUP_CONNECT,		"duplicate_connect"	},
@@ -133,7 +133,7 @@ index bcd09d3a44da..2f256f32f38e 100644
  	{ NVMF_OPT_ERR,			NULL			}
  };
  
-@@ -626,6 +628,7 @@ static int nvmf_parse_options(struct nvmf_ctrl_options *opts,
+@@ -630,6 +632,7 @@ static int nvmf_parse_options(struct nvmf_ctrl_options *opts,
  	opts->reconnect_delay = NVMF_DEF_RECONNECT_DELAY;
  	opts->kato = NVME_DEFAULT_KATO;
  	opts->duplicate_connect = false;
@@ -141,7 +141,7 @@ index bcd09d3a44da..2f256f32f38e 100644
  
  	options = o = kstrdup(buf, GFP_KERNEL);
  	if (!options)
-@@ -750,6 +753,17 @@ static int nvmf_parse_options(struct nvmf_ctrl_options *opts,
+@@ -754,6 +757,17 @@ static int nvmf_parse_options(struct nvmf_ctrl_options *opts,
  				pr_warn("ctrl_loss_tmo < 0 will reconnect forever\n");
  			ctrl_loss_tmo = token;
  			break;
@@ -159,7 +159,7 @@ index bcd09d3a44da..2f256f32f38e 100644
  		case NVMF_OPT_HOSTNQN:
  			if (opts->host) {
  				pr_err("hostnqn already user-assigned: %s\n",
-@@ -830,11 +844,15 @@ static int nvmf_parse_options(struct nvmf_ctrl_options *opts,
+@@ -834,11 +848,15 @@ static int nvmf_parse_options(struct nvmf_ctrl_options *opts,
  		opts->nr_io_queues = 0;
  		opts->duplicate_connect = true;
  	}
@@ -177,7 +177,7 @@ index bcd09d3a44da..2f256f32f38e 100644
  
  	if (!opts->host) {
  		kref_get(&nvmf_default_host->ref);
-@@ -903,7 +921,8 @@ EXPORT_SYMBOL_GPL(nvmf_free_options);
+@@ -907,7 +925,8 @@ EXPORT_SYMBOL_GPL(nvmf_free_options);
  #define NVMF_REQUIRED_OPTS	(NVMF_OPT_TRANSPORT | NVMF_OPT_NQN)
  #define NVMF_ALLOWED_OPTS	(NVMF_OPT_QUEUE_SIZE | NVMF_OPT_NR_IO_QUEUES | \
  				 NVMF_OPT_KATO | NVMF_OPT_HOSTNQN | \
@@ -227,10 +227,10 @@ index aa2fdb2a2e8f..5a434a8d2552 100644
  
  /*
 diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index c27af277e14e..e2a80183ab6a 100644
+index 022e03643dac..4bd994bac9b5 100644
 --- a/drivers/nvme/host/multipath.c
 +++ b/drivers/nvme/host/multipath.c
-@@ -157,6 +157,26 @@ inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
+@@ -180,6 +180,26 @@ inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
  	return ns;
  }
  
@@ -257,7 +257,7 @@ index c27af277e14e..e2a80183ab6a 100644
  static blk_qc_t nvme_ns_head_make_request(struct request_queue *q,
  		struct bio *bio)
  {
-@@ -175,14 +195,14 @@ static blk_qc_t nvme_ns_head_make_request(struct request_queue *q,
+@@ -198,14 +218,14 @@ static blk_qc_t nvme_ns_head_make_request(struct request_queue *q,
  				      disk_devt(ns->head->disk),
  				      bio->bi_iter.bi_sector);
  		ret = direct_make_request(bio);
@@ -276,13 +276,13 @@ index c27af277e14e..e2a80183ab6a 100644
  		bio->bi_status = BLK_STS_IOERR;
  		bio_endio(bio);
 diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 60220de2db52..2588b84f6422 100644
+index 276975506709..48928565291c 100644
 --- a/drivers/nvme/host/nvme.h
 +++ b/drivers/nvme/host/nvme.h
-@@ -237,6 +237,11 @@ struct nvme_ctrl {
- 	u16 maxcmd;
- 	int nr_reconnects;
- 	struct nvmf_ctrl_options *opts;
+@@ -242,6 +242,11 @@ struct nvme_ctrl {
+ 
+ 	struct page *discard_page;
+ 	unsigned long discard_page_busy;
 +#ifndef __GENKSYMS__
 +	struct delayed_work failfast_work;
 +	unsigned long flags;

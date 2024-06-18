@@ -48,18 +48,18 @@ Cc: rafael.j.wysocki@intel.com
 Cc: hdegoede@redhat.com
 Link: https://lkml.kernel.org/r/20190628072307.24678-1-drake@endlessm.com
 diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 130e81e..c2ef0da 100644
+index 163c2af44a44..2a554d6009ac 100644
 --- a/arch/x86/include/asm/apic.h
 +++ b/arch/x86/include/asm/apic.h
-@@ -174,6 +174,7 @@ extern void lapic_assign_system_vectors(void);
- extern void lapic_assign_legacy_vector(unsigned int isairq, bool replace);
+@@ -175,6 +175,7 @@ extern void lapic_assign_legacy_vector(unsigned int isairq, bool replace);
+ extern void lapic_update_legacy_vectors(void);
  extern void lapic_online(void);
  extern void lapic_offline(void);
 +extern bool apic_needs_pit(void);
  
  #else /* !CONFIG_X86_LOCAL_APIC */
  static inline void lapic_shutdown(void) { }
-@@ -187,6 +188,7 @@ static inline void init_bsp_APIC(void) { }
+@@ -188,6 +189,7 @@ static inline void init_bsp_APIC(void) { }
  static inline void apic_intr_mode_init(void) { }
  static inline void lapic_assign_system_vectors(void) { }
  static inline void lapic_assign_legacy_vector(unsigned int i, bool r) { }
@@ -68,7 +68,7 @@ index 130e81e..c2ef0da 100644
  
  #ifdef CONFIG_X86_X2APIC
 diff --git a/arch/x86/include/asm/time.h b/arch/x86/include/asm/time.h
-index cef818b..8ac563a 100644
+index cef818b16045..8ac563abb567 100644
 --- a/arch/x86/include/asm/time.h
 +++ b/arch/x86/include/asm/time.h
 @@ -7,6 +7,7 @@
@@ -80,10 +80,10 @@ index cef818b..8ac563a 100644
  extern struct clock_event_device *global_clock_event;
  
 diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 84132ed..16b259f 100644
+index 9318fe7d850e..02221a4a8a39 100644
 --- a/arch/x86/kernel/apic/apic.c
 +++ b/arch/x86/kernel/apic/apic.c
-@@ -796,6 +796,33 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
+@@ -799,6 +799,33 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
  	return 0;
  }
  
@@ -118,7 +118,7 @@ index 84132ed..16b259f 100644
  {
  	struct clock_event_device *levt = this_cpu_ptr(&lapic_events);
 diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index ff0d14c..6207f80 100644
+index af59aa9c5523..cfdf213075b7 100644
 --- a/arch/x86/kernel/apic/io_apic.c
 +++ b/arch/x86/kernel/apic/io_apic.c
 @@ -58,6 +58,7 @@
@@ -129,7 +129,7 @@ index ff0d14c..6207f80 100644
  #include <asm/i8259.h>
  #include <asm/setup.h>
  #include <asm/irq_remapping.h>
-@@ -2081,6 +2082,9 @@ static inline void __init check_timer(void)
+@@ -2142,6 +2143,9 @@ static inline void __init check_timer(void)
  	unsigned long flags;
  	int no_pin1 = 0;
  
@@ -140,7 +140,7 @@ index ff0d14c..6207f80 100644
  
  	/*
 diff --git a/arch/x86/kernel/i8253.c b/arch/x86/kernel/i8253.c
-index 0d307a6..2b7999a 100644
+index 0d307a657abb..2b7999a1a50a 100644
 --- a/arch/x86/kernel/i8253.c
 +++ b/arch/x86/kernel/i8253.c
 @@ -8,6 +8,7 @@
@@ -186,10 +186,10 @@ index 0d307a6..2b7999a 100644
  
  #ifndef CONFIG_X86_64
 diff --git a/arch/x86/kernel/time.c b/arch/x86/kernel/time.c
-index fddaefc..548dc9a 100644
+index 0680a2e9e06b..aa95e13c53bc 100644
 --- a/arch/x86/kernel/time.c
 +++ b/arch/x86/kernel/time.c
-@@ -81,8 +81,11 @@ static void __init setup_default_timer_irq(void)
+@@ -77,8 +77,11 @@ static void __init setup_default_timer_irq(void)
  /* Default timer init function */
  void __init hpet_time_init(void)
  {

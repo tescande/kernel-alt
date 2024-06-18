@@ -22,10 +22,10 @@ Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
  1 file changed, 10 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/acpi/apei/bert.c b/drivers/acpi/apei/bert.c
-index 12771fcf0417..0d948d0a41af 100644
+index d2212e092c50..e5f326fdf5ec 100644
 --- a/drivers/acpi/apei/bert.c
 +++ b/drivers/acpi/apei/bert.c
-@@ -42,15 +42,7 @@ static void __init bert_print_all(struct acpi_bert_region *region,
+@@ -43,15 +43,7 @@ static void __init bert_print_all(struct acpi_bert_region *region,
  	int remain = region_len;
  	u32 estatus_len;
  
@@ -42,7 +42,7 @@ index 12771fcf0417..0d948d0a41af 100644
  		estatus_len = cper_estatus_len(estatus);
  		if (remain < estatus_len) {
  			pr_err(FW_BUG "Truncated status block (length: %u).\n",
-@@ -58,6 +50,15 @@ static void __init bert_print_all(struct acpi_bert_region *region,
+@@ -59,6 +51,15 @@ static void __init bert_print_all(struct acpi_bert_region *region,
  			return;
  		}
  
@@ -56,9 +56,9 @@ index 12771fcf0417..0d948d0a41af 100644
 +		}
 +
  		pr_info_once("Error records from previous boot:\n");
- 
- 		cper_estatus_print(KERN_INFO HW_ERR, estatus);
-@@ -70,10 +71,6 @@ static void __init bert_print_all(struct acpi_bert_region *region,
+ 		if (region_len < ACPI_BERT_PRINT_MAX_LEN)
+ 			cper_estatus_print(KERN_INFO HW_ERR, estatus);
+@@ -74,10 +75,6 @@ static void __init bert_print_all(struct acpi_bert_region *region,
  		estatus->block_status = 0;
  
  		estatus = (void *)estatus + estatus_len;
