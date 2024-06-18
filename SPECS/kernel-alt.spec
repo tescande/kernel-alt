@@ -68,8 +68,10 @@ Source4: Module.kabi
 #Patch004: 0001-mm-page_alloc.c-fix-uninitialized-memmaps-on-a-parti.patch
 Patch005: 0001-mtip32xx-fully-switch-to-the-generic-DMA-API.patch
 Patch006: 0002-mtip32xx-clean-an-indentation-issue-remove-extraneou.patch
+# GFS2 not supported
 #Patch007: 0001-GFS2-Flush-the-GFS2-delete-workqueue-before-stopping.patch
 Patch008: 0001-scsi-libfc-retry-PRLI-if-we-cannot-analyse-the-paylo.patch
+# GFS2 not supported
 #Patch009: 0001-gfs2-improve-debug-information-when-lvb-mismatches-a.patch
 #Patch010: 0001-gfs2-Don-t-set-GFS2_RDF_UPTODATE-when-the-lvb-is-upd.patch
 #Patch011: 0001-gfs2-slow-the-deluge-of-io-error-messages.patch
@@ -97,9 +99,11 @@ Patch032: 0010-mtip32xx-don-t-use-req-special.patch
 Patch033: 0011-mtip32xxx-use-for_each_sg.patch
 Patch034: 0012-mtip32xx-avoid-using-semaphores.patch
 Patch035: 0013-mtip32xx-use-BLK_STS_DEV_RESOURCE-for-device-resourc.patch
+# Merged upstream
 #Patch036: 0001-cifs-Limit-memory-used-by-lock-request-calls-to-a-pa.patch
 #Patch037: 0001-always-clear-the-X2APIC_ENABLE-bit-for-PV-guest.patch
 #Patch038: 0001-xen-pciback-Check-dev_data-before-using-it.patch
+# GFS2 not supported
 #Patch039: 0001-gfs2-changes-to-gfs2_log_XXX_bio.patch
 #Patch040: 0001-gfs2-Remove-vestigial-bd_ops.patch
 #Patch041: 0001-gfs2-properly-initial-file_lock-used-for-unlock.patch
@@ -109,6 +113,7 @@ Patch035: 0013-mtip32xx-use-BLK_STS_DEV_RESOURCE-for-device-resourc.patch
 #Patch045: 0001-gfs2-add-a-helper-function-to-get_log_header-that-ca.patch
 #Patch046: 0001-gfs2-Dump-nrpages-for-inodes-and-their-glocks.patch
 #Patch047: 0001-gfs2-take-jdata-unstuff-into-account-in-do_grow.patch
+# GFS2/DLM not supported
 #Patch048: 0001-dlm-fix-invalid-free.patch
 #Patch049: 0001-dlm-don-t-allow-zero-length-names.patch
 #Patch050: 0001-dlm-don-t-leak-kernel-pointer-to-userspace.patch
@@ -132,6 +137,7 @@ Patch067: 0001-gfs-no-need-to-check-return-value-of-debugfs_create-.patch
 #Patch068: 0001-scsi-iscsi-flush-running-unbind-operations-when-remo.patch
 #Patch069: 0001-xen-Prevent-buffer-overflow-in-privcmd-ioctl.patch
 #Patch070: 0001-Revert-scsi-fcoe-clear-FC_RP_STARTED-flags-when-rece.patch
+# GFS2 not supported
 #Patch071: 0001-gfs2-Fix-lru_count-going-negative.patch
 #Patch072: 0002-gfs2-clean_journal-improperly-set-sd_log_flush_head.patch
 #Patch073: 0003-gfs2-Fix-occasional-glock-use-after-free.patch
@@ -143,8 +149,10 @@ Patch078: 0001-iomap-Clean-up-__generic_write_end-calling.patch
 Patch079: 0002-fs-Turn-__generic_write_end-into-a-void-function.patch
 Patch080: 0003-iomap-Fix-use-after-free-error-in-page_done-callback.patch
 Patch081: 0004-iomap-Add-a-page_prepare-callback.patch
+# GFS2 not supported
 #Patch082: 0008-gfs2-Fix-iomap-write-page-reclaim-deadlock.patch
 Patch083: 0001-fs-mark-expected-switch-fall-throughs.patch
+# GFS2 not supported
 #Patch084: 0001-gfs2-Fix-loop-in-gfs2_rbm_find-v2.patch
 #Patch085: 0001-gfs2-Remove-unnecessary-extern-declarations.patch
 #Patch086: 0001-gfs2-fix-race-between-gfs2_freeze_func-and-unmount.patch
@@ -152,10 +160,12 @@ Patch083: 0001-fs-mark-expected-switch-fall-throughs.patch
 #Patch088: 0001-gfs2-Fix-error-path-kobject-memory-leak.patch
 Patch089: 0009-SUNRPC-Ensure-that-the-transport-layer-respect-major.patch
 Patch090: 0011-SUNRPC-Start-the-first-major-timeout-calculation-at-.patch
+# GFS2 not supported
 #Patch091: 0001-gfs2-Fix-sign-extension-bug-in-gfs2_update_stats.patch
 #Patch092: 0001-Revert-gfs2-Replace-gl_revokes-with-a-GLF-flag.patch
 #Patch093: 0001-gfs2-Fix-rounding-error-in-gfs2_iomap_page_prepare.patch
 Patch094: 0001-iomap-don-t-mark-the-inode-dirty-in-iomap_write_end.patch
+# GFS2 not supported
 #Patch095: 0001-gfs2-Clean-up-freeing-struct-gfs2_sbd.patch
 #Patch096: 0001-gfs2-Use-IS_ERR_OR_NULL.patch
 #Patch097: 0001-gfs2-kthread-and-remount-improvements.patch
@@ -200,6 +210,7 @@ Patch119: 0001-kernel-module.c-Only-return-EEXIST-for-modules-that-.patch
 #Patch136: 0001-scsi-libiscsi-Fix-race-between-iscsi_xmit_task-and-i.patch
 #Patch137: 0001-xen-netback-Reset-nr_frags-before-freeing-skb.patch
 #Patch138: 0001-openvswitch-change-type-of-UPCALL_PID-attribute-to-N.patch
+# GFS2 not supported
 #Patch139: 0001-gfs2-gfs2_iomap_begin-cleanup.patch
 #Patch140: 0001-gfs2-Add-support-for-IOMAP_ZERO.patch
 #Patch141: 0001-gfs2-implement-gfs2_block_zero_range-using-iomap_zer.patch
@@ -217,7 +228,9 @@ Patch119: 0001-kernel-module.c-Only-return-EEXIST-for-modules-that-.patch
 #Patch153: 0001-gfs2-clear-buf_in_tr-when-ending-a-transaction-in-sw.patch
 #Patch154: 0001-xen-efi-Set-nonblocking-callbacks.patch
 #Patch155: 0001-net-fix-sk_page_frag-recursion-from-memory-reclaim.patch
+# vGPU not supported
 #Patch156: 0001-drm-i915-gvt-Allow-F_CMD_ACCESS-on-mmio-0x21f0.patch
+# GFS2 not supported
 #Patch157: 0001-gfs2-add-compat_ioctl-support.patch
 #Patch158: 0001-gfs2-removed-unnecessary-semicolon.patch
 #Patch159: 0001-gfs2-Some-whitespace-cleanups.patch
@@ -235,7 +248,9 @@ Patch119: 0001-kernel-module.c-Only-return-EEXIST-for-modules-that-.patch
 #Patch171: 0001-gfs2-clean-up-iopen-glock-mess-in-gfs2_create_inode.patch
 #Patch172: 0001-gfs2-Remove-duplicate-call-from-gfs2_create_inode.patch
 #Patch173: 0001-gfs2-Don-t-write-log-headers-after-file-system-withd.patch
+# Adapted to match with upstream modifications
 Patch174: 0001-xen-events-remove-event-handling-recursion-detection.patch
+# GFS2 not supported
 #Patch175: 0001-gfs2-Another-gfs2_find_jhead-fix.patch
 #Patch176: 0001-gfs2-eliminate-ssize-parameter-from-gfs2_struct2blk.patch
 #Patch177: 0001-gfs2-minor-cleanup-remove-unneeded-variable-ret-in-g.patch
@@ -248,11 +263,13 @@ Patch174: 0001-xen-events-remove-event-handling-recursion-detection.patch
 #Patch184: 0001-gfs2-fix-gfs2_find_jhead-that-returns-uninitialized-.patch
 #Patch185: 0001-gfs2-move-setting-current-backing_dev_info.patch
 #Patch186: 0001-gfs2-fix-O_SYNC-write-handling.patch
+# vGPU not supported
 #Patch187: 0001-drm-i915-gvt-fix-high-order-allocation-failure-on-la.patch
 #Patch188: 0001-drm-i915-gvt-Add-mutual-lock-for-ppgtt-mm-LRU-list.patch
 #Patch189: 0002-drm-i915-gvt-more-locking-for-ppgtt-mm-LRU-list.patch
 #Patch190: 0001-xenbus-req-body-should-be-updated-before-req-state.patch
 #Patch191: 0002-xenbus-req-err-should-be-updated-before-req-state.patch
+# GFS2 not supported
 #Patch192: 0001-gfs2_atomic_open-fix-O_EXCL-O_CREAT-handling-on-cold.patch
 #Patch193: 0001-gfs2-Split-gfs2_lm_withdraw-into-two-functions.patch
 #Patch194: 0001-gfs2-Report-errors-before-withdraw.patch
@@ -301,6 +318,7 @@ Patch236: 0004-net-add-sock_set_keepalive.patch
 Patch237: 0005-net-add-sock_set_rcvbuf.patch
 Patch238: 0006-tcp-add-tcp_sock_set_nodelay.patch
 Patch239: 0007-sctp-add-sctp_sock_set_nodelay.patch
+# GVFS2/DLM not supported
 #Patch240: 0009-dlm-dlm_internal-Replace-zero-length-array-with-flex.patch
 #Patch241: 0010-dlm-user-Replace-zero-length-array-with-flexible-arr.patch
 #Patch242: 0011-fs-dlm-remove-unneeded-semicolon-in-rcom.c.patch
@@ -347,6 +365,7 @@ Patch253: 0001-net-sock-add-sock_set_mark.patch
 #Patch283: 0012-xen-events-defer-eoi-in-case-of-excessive-number-of-.patch
 #Patch284: 0013-xen-events-block-rogue-events-for-some-time.patch
 Patch285: 0014-xen-events-unmask-a-fifo-event-channel-only-if-it-wa.patch
+# GFS2/DLM not supported
 #Patch286: 0034-fs-dlm-fix-proper-srcu-api-call.patch
 #Patch287: 0035-fs-dlm-define-max-send-buffer.patch
 #Patch288: 0036-fs-dlm-add-get-buffer-error-handling.patch
@@ -360,6 +379,7 @@ Patch285: 0014-xen-events-unmask-a-fifo-event-channel-only-if-it-wa.patch
 #Patch296: 0044-fs-dlm-fix-check-for-multi-homed-hosts.patch
 #Patch297: 0045-fs-dlm-constify-addr_compare.patch
 #Patch298: 0046-fs-dlm-check-on-existing-node-address.patch
+# Adapted to match with upstream modifications
 Patch299: 0001-xen-netback-avoid-race-in-xenvif_rx_ring_slots_avail.patch
 #Patch300: 0001-Xen-x86-don-t-bail-early-from-clear_foreign_p2m_mapp.patch
 #Patch301: 0001-Xen-x86-also-check-kernel-mapping-in-set_foreign_p2m.patch
@@ -384,6 +404,7 @@ Patch314: 0001-x86-ioperm-Add-new-paravirt-function-update_io_bitma.patch
 #Patch320: 0001-xen-events-fix-setting-irq-affinity.patch
 #Patch321: 0001-xen-netback-fix-rx-queue-stall-detection.patch
 #Patch322: 0002-xen-netback-don-t-queue-unlimited-number-of-packages.patch
+# GFS2/DLM not supported
 #Patch323: 0047-fs-dlm-fix-debugfs-dump.patch
 #Patch324: 0048-fs-dlm-fix-mark-setting-deadlock.patch
 #Patch325: 0049-fs-dlm-set-connected-bit-after-accept.patch
@@ -399,6 +420,7 @@ Patch314: 0001-x86-ioperm-Add-new-paravirt-function-update_io_bitma.patch
 #Patch335: 0059-fs-dlm-add-shutdown-hook.patch
 #Patch336: 0060-fs-dlm-fix-missing-unlock-on-error-in-accept_from_so.patch
 #Patch337: 0001-xen-events-reset-active-flag-for-lateeoi-events-late.patch
+# GFS2/DLM not supported
 #Patch338: 0061-fs-dlm-always-run-complete-for-possible-waiters.patch
 #Patch339: 0062-fs-dlm-add-dlm-macros-for-ratelimit-log.patch
 #Patch340: 0063-fs-dlm-fix-srcu-read-lock-usage.patch
@@ -449,6 +471,7 @@ Patch384: 0001-x86-timer-Skip-PIT-initialization-on-modern-chipsets.patch
 Patch385: 0001-x86-timer-Force-PIT-initialization-when-X86_FEATURE_.patch
 Patch386: 0001-x86-timer-Don-t-skip-PIT-setup-when-APIC-is-disabled.patch
 Patch387: 0001-nbd-Fix-use-after-free-in-pid_show.patch
+# GFS2/DLM not supported
 #Patch388: 0001-fs-dlm-remove-check-SCTP-is-loaded-message.patch
 #Patch389: 0001-fs-dlm-let-handle-callback-data-as-void.patch
 #Patch390: 0001-fs-dlm-remove-double-list_first_entry-call.patch
@@ -462,6 +485,7 @@ Patch387: 0001-nbd-Fix-use-after-free-in-pid_show.patch
 #Patch398: 0001-fs-dlm-print-cluster-addr-if-non-cluster-node-connec.patch
 Patch399: 0001-xen-x86-obtain-upper-32-bits-of-video-frame-buffer-a.patch
 Patch400: 0001-xen-x86-obtain-full-video-frame-buffer-address-for-D.patch
+# GFS2/DLM not supported
 #Patch401: 0001-dlm-uninitialized-variable-on-error-in-dlm_listen_fo.patch
 #Patch402: 0001-dlm-add-__CHECKER__-for-false-positives.patch
 #Patch403: 0001-fs-dlm-fix-grammar-in-lowcomms-output.patch
@@ -472,6 +496,7 @@ Patch400: 0001-xen-x86-obtain-full-video-frame-buffer-address-for-D.patch
 #Patch408: 0003-fs-dlm-remove-send-repeat-remove-handling.patch
 #Patch409: 0001-xen-pvh-set-xen_domain_type-to-HVM-in-xen_pvh_init.patch
 #Patch410: 0001-xen-pvh-correctly-setup-the-PV-EFI-interface-for-dom.patch
+# Modified for new exit path in nvme_fc_init_module()
 Patch411: 0001-nvme_fc-add-nvme_discovery-sysfs-attribute-to-fc-tra.patch
 Patch412: 0001-ACPI-processor-Fix-evaluating-_PDC-method-when-runni.patch
 #Patch413: 0001-SUNRPC-Always-drop-the-XPRT_LOCK-on-XPRT_CLOSE_WAIT.patch
@@ -525,12 +550,14 @@ Patch415: 0001-nvme-fabrics-reject-I-O-to-offline-device.patch
 #Patch461: 0002-xen-netfront-fix-leaking-data-in-shared-pages.patch
 #Patch462: 0003-xen-netfront-force-data-bouncing-when-backend-is-unt.patch
 #Patch463: 0004-xen-blkfront-force-data-bouncing-when-backend-is-unt.patch
+# Merged upstream
 #Patch464: xsa423-linux.patch
 #Patch465: xsa424-linux.patch
 Patch466: 0002-xen-netback-remove-unused-variables-pending_idx-and-.patch
 #Patch467: 0003-xen-netback-don-t-do-grant-copy-across-page-boundary.patch
 Patch468: 0004-xen-netback-remove-not-needed-test-in-xenvif_tx_buil.patch
 #Patch469: 0005-xen-netback-use-same-error-messages-for-same-errors.patch
+# Merged upstream
 #Patch470: xsa432-linux.patch
 #Patch471: xsa441-linux.patch
 Patch472: kbuild-AFTER_LINK.patch
@@ -541,6 +568,7 @@ Patch476: tg3-alloc-repeat.patch
 Patch477: disable-EFI-Properties-table-for-Xen.patch
 Patch478: net-Do-not-scrub-ignore_df-within-the-same-name-spac.patch
 Patch479: enable-fragmention-gre-packets.patch
+# Adapted to match with upstream modifications
 Patch480: CA-285778-emulex-nic-ip-hdr-len.patch
 Patch481: cifs-Change-the-default-value-SecFlags-to-0x83.patch
 Patch482: call-kexec-before-offlining-noncrashing-cpus.patch
@@ -561,15 +589,19 @@ Patch496: pciback-mask-root-port-comp-timeout.patch
 Patch497: no-flr-quirk.patch
 Patch498: revert-PCI-Probe-for-device-reset-support-during-enumeration.patch
 Patch499: CA-135938-nfs-disconnect-on-rpc-retry.patch
+# Adapted to match with upstream modifications
 Patch500: sunrpc-force-disconnect-on-connection-timeout.patch
 Patch501: nfs-avoid-double-timeout.patch
+# Adapted to match with upstream modifications
 Patch502: bonding-balance-slb.patch
+# Adapted to match with upstream modifications
 Patch503: bridge-lock-fdb-after-garp.patch
 Patch504: CP-13181-net-openvswitch-add-dropping-of-fip-and-lldp.patch
 Patch505: xen-ioemu-inject-msi.patch
 Patch506: pv-iommu-support.patch
 Patch507: kexec-reserve-crashkernel-region.patch
 Patch508: 0001-xen-swiotlb-rework-early-repeat-code.patch
+# vGPU not supported
 #Patch509: 0001-arch-x86-xen-add-infrastruction-in-xen-to-support-gv.patch
 #Patch510: 0002-drm-i915-gvt-write-guest-ppgtt-entry-for-xengt-suppo.patch
 #Patch511: 0003-drm-i915-xengt-xengt-moudule-initial-files.patch
@@ -624,14 +656,17 @@ Patch508: 0001-xen-swiotlb-rework-early-repeat-code.patch
 #Patch560: xengt-fix-shutdown-failures.patch
 #Patch561: xengt-i915-gem-vgtbuffer.patch
 #Patch562: xengt-gtt-2m-alignment.patch
+# Adapted to match with upstream modifications (moved from sock.c to sock.h)
 Patch563: net-core__order-3_frag_allocator_causes_swiotlb_bouncing_under_xen.patch
 Patch564: idle_cpu-return-0-during-softirq.patch
 Patch565: default-xen-swiotlb-size-128MiB.patch
+# GFS2/DLM not supported
 #Patch566: dlm__increase_socket_backlog_to_avoid_hangs_with_16_nodes.patch
 #Patch567: gfs2-add-skippiness.patch
 #Patch568: GFS2__Avoid_recently_demoted_rgrps
 #Patch569: gfs2-debug-rgrp-sweep
 #Patch570: gfs2-restore-kabi.patch
+# Modified to use the 'static const struct devtable' introduced upstream
 Patch571: 0001-Add-auxiliary-bus-support.patch
 Patch572: 0002-driver-core-auxiliary-bus-move-slab.h-from-include-f.patch
 Patch573: 0003-driver-core-auxiliary-bus-make-remove-function-retur.patch
@@ -645,6 +680,7 @@ Patch580: 0010-Documentation-auxiliary_bus-Clarify-__auxiliary_driv.patch
 Patch581: 0011-Documentation-auxiliary_bus-Clarify-the-release-of-d.patch
 Patch582: 0012-Documentation-auxiliary_bus-Move-the-text-into-the-c.patch
 Patch583: 0013-CP-41018-Make-CONFIG_AUXILIARY_BUS-y-work.patch
+# Set EXTRAVERSION = +1
 Patch584: abi-version.patch
 
 %if %{do_kabichk}
