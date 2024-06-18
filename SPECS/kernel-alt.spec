@@ -1,6 +1,6 @@
 %define uname 4.19.316
 %define short_uname 4.19
-%define base_version 4.19.19
+%define base_version 4.19.316
 %define srcpath /usr/src/kernels/%{uname}-%{_arch}
 
 # Control whether we perform a compat. check against published ABI.
@@ -23,7 +23,7 @@
 Name: kernel-alt
 License: GPLv2
 Version: %{uname}
-Release: 6%{?dist}
+Release: 1%{?dist}
 ExclusiveArch: x86_64
 ExclusiveOS: Linux
 Summary: The Linux kernel
@@ -645,7 +645,7 @@ Patch580: 0010-Documentation-auxiliary_bus-Clarify-__auxiliary_driv.patch
 Patch581: 0011-Documentation-auxiliary_bus-Clarify-the-release-of-d.patch
 Patch582: 0012-Documentation-auxiliary_bus-Move-the-text-into-the-c.patch
 Patch583: 0013-CP-41018-Make-CONFIG_AUXILIARY_BUS-y-work.patch
-#Patch584: abi-version.patch
+Patch584: abi-version.patch
 
 %if %{do_kabichk}
 %endif
@@ -717,7 +717,7 @@ Conflicts: python2-perf
 %{pythonperfdesc}
 
 %prep
-%autosetup -p1 -n kernel-%{uname}
+%autosetup -p1 -n kernel-%{base_version}
 
 %build
 
