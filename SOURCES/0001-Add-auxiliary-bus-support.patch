@@ -681,10 +681,10 @@ index 000000000000..639005943fc3
 +
 +#endif /* _AUXILIARY_BUS_H_ */
 diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 01797cb4587e..d8f4ac0eebe8 100644
+index 9e3600572e9c..0ae93acc2afc 100644
 --- a/include/linux/mod_devicetable.h
 +++ b/include/linux/mod_devicetable.h
-@@ -762,4 +762,12 @@ struct typec_device_id {
+@@ -766,4 +766,12 @@ struct typec_device_id {
  	kernel_ulong_t driver_data;
  };
  
@@ -711,12 +711,12 @@ index 293004499b4d..3d730bb6e1cf 100644
  	return 0;
  }
 diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index 7be43697ff84..cc0193d79620 100644
+index 90868df7865e..1de573049051 100644
 --- a/scripts/mod/file2alias.c
 +++ b/scripts/mod/file2alias.c
-@@ -1365,6 +1365,15 @@ static int do_typec_entry(const char *filename, void *symval, char *alias)
+@@ -1276,6 +1276,14 @@ static int do_typec_entry(const char *filename, void *symval, char *alias)
+ 	return 1;
  }
- ADD_TO_DEVTABLE("typec", typec_device_id, do_typec_entry);
  
 +static int do_auxiliary_entry(const char *filename, void *symval, char *alias)
 +{
@@ -725,11 +725,18 @@ index 7be43697ff84..cc0193d79620 100644
 +
 +	return 1;
 +}
-+ADD_TO_DEVTABLE("auxiliary", auxiliary_device_id, do_auxiliary_entry);
 +
  /* Does namelen bytes of name exactly match the symbol? */
  static bool sym_is(const char *name, unsigned namelen, const char *symbol)
  {
+@@ -1346,6 +1354,7 @@ static const struct devtable devtable[] = {
+ 	{"fslmc", SIZE_fsl_mc_device_id, do_fsl_mc_entry},
+ 	{"tbsvc", SIZE_tb_service_id, do_tbsvc_entry},
+ 	{"typec", SIZE_typec_device_id, do_typec_entry},
++	{"auxiliary", SIZE_auxiliary_device_id, do_auxiliary_entry},
+ };
+ 
+ /* Create MODULE_ALIAS() statements.
 -- 
 2.18.4
 

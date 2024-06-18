@@ -19,7 +19,7 @@ Signed-off-by: Christoph Hellwig <hch@lst.de>
  1 file changed, 95 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index fd700073d312..9d201b35397d 100644
+index ed88d5021772..cf64cda36398 100644
 --- a/drivers/nvme/host/fc.c
 +++ b/drivers/nvme/host/fc.c
 @@ -122,6 +122,7 @@ struct nvme_fc_rport {
@@ -30,7 +30,7 @@ index fd700073d312..9d201b35397d 100644
  	struct device			*dev;	/* physical device for dma */
  	struct nvme_fc_lport		*lport;
  	spinlock_t			lock;
-@@ -210,7 +211,6 @@ static DEFINE_IDA(nvme_fc_ctrl_cnt);
+@@ -212,7 +213,6 @@ static struct workqueue_struct *nvme_fc_wq;
   * These items are short-term. They will eventually be moved into
   * a generic FC class. See comments in module init.
   */
@@ -38,7 +38,7 @@ index fd700073d312..9d201b35397d 100644
  static struct device *fc_udev_device;
  
  
-@@ -507,6 +507,7 @@ nvme_fc_free_rport(struct kref *ref)
+@@ -509,6 +509,7 @@ nvme_fc_free_rport(struct kref *ref)
  	list_del(&rport->endp_list);
  	spin_unlock_irqrestore(&nvme_fc_lock, flags);
  
@@ -46,7 +46,7 @@ index fd700073d312..9d201b35397d 100644
  	ida_simple_remove(&lport->endp_cnt, rport->remoteport.port_num);
  
  	kfree(rport);
-@@ -694,6 +695,7 @@ nvme_fc_register_remoteport(struct nvme_fc_local_port *localport,
+@@ -696,6 +697,7 @@ nvme_fc_register_remoteport(struct nvme_fc_local_port *localport,
  	INIT_LIST_HEAD(&newrec->endp_list);
  	INIT_LIST_HEAD(&newrec->ctrl_list);
  	INIT_LIST_HEAD(&newrec->ls_req_list);
@@ -54,7 +54,7 @@ index fd700073d312..9d201b35397d 100644
  	kref_init(&newrec->ref);
  	atomic_set(&newrec->act_ctrl_cnt, 0);
  	spin_lock_init(&newrec->lock);
-@@ -3254,6 +3256,90 @@ static struct nvmf_transport_ops nvme_fc_transport = {
+@@ -3332,6 +3334,90 @@ static struct nvmf_transport_ops nvme_fc_transport = {
  	.create_ctrl	= nvme_fc_create_ctrl,
  };
  
@@ -145,7 +145,7 @@ index fd700073d312..9d201b35397d 100644
  static int __init nvme_fc_init_module(void)
  {
  	int ret;
-@@ -3272,16 +3358,16 @@ static int __init nvme_fc_init_module(void)
+@@ -3354,17 +3440,16 @@ static int __init nvme_fc_init_module(void)
  	 * put in place, this code will move to a more generic
  	 * location for the class.
  	 */
@@ -154,8 +154,8 @@ index fd700073d312..9d201b35397d 100644
 +	ret = class_register(&fc_class);
 +	if (ret) {
  		pr_err("couldn't register class fc\n");
--		return PTR_ERR(fc_class);
-+		return ret;
+-		ret = PTR_ERR(fc_class);
+ 		goto out_destroy_wq;
  	}
  
  	/*
@@ -166,7 +166,7 @@ index fd700073d312..9d201b35397d 100644
  				"fc_udev_device");
  	if (IS_ERR(fc_udev_device)) {
  		pr_err("couldn't create fc_udev device!\n");
-@@ -3296,9 +3382,9 @@ static int __init nvme_fc_init_module(void)
+@@ -3379,9 +3464,9 @@ static int __init nvme_fc_init_module(void)
  	return 0;
  
  out_destroy_device:
@@ -175,10 +175,10 @@ index fd700073d312..9d201b35397d 100644
  out_destroy_class:
 -	class_destroy(fc_class);
 +	class_unregister(&fc_class);
- 	return ret;
- }
+ out_destroy_wq:
+ 	destroy_workqueue(nvme_fc_wq);
  
-@@ -3313,8 +3399,8 @@ static void __exit nvme_fc_exit_module(void)
+@@ -3399,8 +3484,8 @@ static void __exit nvme_fc_exit_module(void)
  	ida_destroy(&nvme_fc_local_port_cnt);
  	ida_destroy(&nvme_fc_ctrl_cnt);
  
@@ -186,9 +186,9 @@ index fd700073d312..9d201b35397d 100644
 -	class_destroy(fc_class);
 +	device_destroy(&fc_class, MKDEV(0, 0));
 +	class_unregister(&fc_class);
+ 	destroy_workqueue(nvme_fc_wq);
  }
  
- module_init(nvme_fc_init_module);
 -- 
 2.31.1
 
