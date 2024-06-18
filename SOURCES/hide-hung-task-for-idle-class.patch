@@ -15,10 +15,10 @@ because the CFQ IO scheduler along with the legacy IO path have been
 removed from upstream kernels.
 
 diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index b9132d1269ef..a1dafca5c5f8 100644
+index 4a9191617076..3bac98ce1bc9 100644
 --- a/kernel/hung_task.c
 +++ b/kernel/hung_task.c
-@@ -84,6 +84,7 @@ static struct notifier_block panic_block = {
+@@ -85,6 +85,7 @@ static struct notifier_block panic_block = {
  
  static void check_hung_task(struct task_struct *t, unsigned long timeout)
  {
@@ -26,7 +26,7 @@ index b9132d1269ef..a1dafca5c5f8 100644
  	unsigned long switch_count = t->nvcsw + t->nivcsw;
  
  	/*
-@@ -109,6 +110,19 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+@@ -110,6 +111,19 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
  	if (time_is_after_jiffies(t->last_switch_time + timeout * HZ))
  		return;
  
@@ -45,4 +45,5 @@ index b9132d1269ef..a1dafca5c5f8 100644
 +
  	trace_sched_process_hang(t);
  
- 	if (!sysctl_hung_task_warnings && !sysctl_hung_task_panic)
+ 	if (sysctl_hung_task_panic) {
+
