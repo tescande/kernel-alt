@@ -1,6 +1,6 @@
-%define uname 4.19.316+1
+%define uname 4.19.321+1
 %define short_uname 4.19
-%define base_version 4.19.316
+%define base_version 4.19.321
 %define srcpath /usr/src/kernels/%{uname}-%{_arch}
 
 # Control whether we perform a compat. check against published ABI.
@@ -71,7 +71,7 @@ Requires(posttrans): python3-xcp-libs >= 3.0.2-4.2.xcpng8.3
 Requires(posttrans): coreutils dracut kmod
 
 
-Source0: kernel-4.19.316.tar.gz
+Source0: kernel-4.19.321.tar.gz
 Source1: kernel-x86_64.config
 Source2: macros.kernel
 
