@@ -863,17 +863,17 @@ make %{?_smp_mflags} modules
 %endif
 
 # make perf
-%global perf_make \
-  make EXTRA_CFLAGS="${RPM_OPT_FLAGS}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} V=1 NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
-%global perf_python2 -C tools/perf PYTHON=%{__python2}
+#%%global perf_make \
+#  make EXTRA_CFLAGS="${RPM_OPT_FLAGS}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} V=1 NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
+#%%global perf_python2 -C tools/perf PYTHON=%{__python2}
 # perf
 # make sure check-headers.sh is executable
-chmod +x tools/perf/check-headers.sh
-%{perf_make} %{perf_python2} all
+#chmod +x tools/perf/check-headers.sh
+#%%{perf_make} %{perf_python2} all
 
-pushd tools/perf/Documentation/
-make %{?_smp_mflags} man
-popd
+#pushd tools/perf/Documentation/
+#make %{?_smp_mflags} man
+#popd
 
 # eBPF support: pahole encodes the type infos into a small (3MB) .BTF section:
 cp vmlinux                                     tmp-vmlinux-with-btf
@@ -914,11 +914,11 @@ install -m 755 vmlinux %{buildroot}/usr/lib/debug/lib/modules/%{uname}
 make INSTALL_HDR_PATH=%{buildroot}/usr headers_install
 
 # perf tool binary and supporting scripts/binaries
-%{perf_make} %{perf_python2} DESTDIR=%{buildroot} lib=%{_lib} install-bin install-traceevent-plugins
+#%%{perf_make} %{perf_python2} DESTDIR=%{buildroot} lib=%{_lib} install-bin install-traceevent-plugins
 # remove the 'trace' symlink.
-rm -f %{buildroot}%{_bindir}/trace
+#rm -f %{buildroot}%{_bindir}/trace
 # remove the perf-tips
-rm -rf %{buildroot}%{_docdir}/perf-tip
+#rm -rf %{buildroot}%{_docdir}/perf-tip
 
 # For both of the below, yes, this should be using a macro but right now
 # it's hard coded and we don't actually want it anyway right now.
@@ -930,11 +930,11 @@ rm -rf %{buildroot}/usr/lib/perf/examples
 rm -rf %{buildroot}/usr/lib/perf/include/bpf/
 
 # python-perf extension
-%{perf_make} %{perf_python2} DESTDIR=%{buildroot} install-python_ext
+#%%{perf_make} %{perf_python2} DESTDIR=%{buildroot} install-python_ext
 
 # perf man pages (note: implicit rpm magic compresses them later)
-install -d %{buildroot}/%{_mandir}/man1
-install -pm0644 tools/perf/Documentation/*.1 %{buildroot}/%{_mandir}/man1/
+#install -d %{buildroot}/%{_mandir}/man1
+#install -pm0644 tools/perf/Documentation/*.1 %{buildroot}/%{_mandir}/man1/
 
 # Install -devel files
 install -d -m 755 %{buildroot}%{_usrsrc}/kernels/%{uname}-%{_arch}
