@@ -809,7 +809,7 @@ Conflicts: python2-perf
 %{pythonperfdesc}
 
 %prep
-%autosetup -p1 -n kernel-%{base_version}
+%autosetup -p1 -n kernel-%{Version}
 
 %build
 source %{SOURCE5}
