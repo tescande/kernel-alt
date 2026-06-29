@@ -72,7 +72,7 @@ Requires(posttrans): python3-xcp-libs >= 3.0.2-4.2.xcpng8.3
 Requires(posttrans): coreutils dracut kmod
 
 
-Source0: kernel-4.19.322.tar.gz
+Source0: kernel-alt-4.19.322.tar.gz
 Source1: kernel-x86_64.config
 Source2: macros.kernel
 
@@ -809,7 +809,7 @@ Conflicts: python2-perf
 %{pythonperfdesc}
 
 %prep
-%autosetup -p1 -n kernel-%{Version}
+%autosetup -p1
 
 %build
 source %{SOURCE5}
