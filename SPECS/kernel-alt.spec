@@ -1,6 +1,6 @@
-%define uname 4.19.322+1
+%define uname 4.19.325+1-cip133-st17
 %define short_uname 4.19
-%define base_version 4.19.322
+%define base_version 4.19.325_cip133
 %define srcpath /usr/src/kernels/%{uname}-%{_arch}
 
 # Control whether we perform a compat. check against published ABI.
@@ -23,8 +23,7 @@
 Name: kernel-alt
 License: GPLv2
 Version: %{base_version}
-Release: 2%{?dist}
-Epoch: 1
+Release: 1%{?dist}
 ExclusiveArch: x86_64
 ExclusiveOS: Linux
 Summary: The Linux kernel
@@ -72,7 +71,7 @@ Requires(posttrans): python3-xcp-libs >= 3.0.2-4.2.xcpng8.3
 Requires(posttrans): coreutils dracut kmod
 
 
-Source0: kernel-alt-4.19.322.tar.gz
+Source0: kernel-alt-4.19.325_cip133.tar.gz
 Source1: kernel-x86_64.config
 Source2: macros.kernel
 
@@ -1135,6 +1134,9 @@ fi
 %{python2_sitearch}/*
 
 %changelog
+* Tue Jun 30 2026 Thierry Escande <thierry.escande@vates.tech> - 4.19.325-cip133-1
+- Update base sources to 4.19.325-cip133
+
 * Thu Jun 25 2026 Thierry Escande <thierry.escande@vates.tech> - 4.19.322-2
 - Update Version variable in specfile to reflect what's done in main package
 

@@ -1,11 +1,11 @@
 diff --git a/Makefile b/Makefile.new
-index a648d82..865647a 100644
+index 0c829cb17a68..8d448c00c550 100644
 --- a/Makefile
 +++ b/Makefile.new
 @@ -2,7 +2,7 @@
  VERSION = 4
  PATCHLEVEL = 19
- SUBLEVEL = 322
+ SUBLEVEL = 325
 -EXTRAVERSION =
 +EXTRAVERSION = +1
  NAME = "People's Front"
