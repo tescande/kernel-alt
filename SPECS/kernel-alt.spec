@@ -751,6 +751,7 @@ Source5: prepare-build
 Patch2000: 0001-tools-perf-define-__ALIGN_KERNEL-missing-macro.patch
 
 Patch2001: 0001-PCI-pciehp-Tolerate-Presence-Detect-hardwired-to-zer.patch
+Patch2002: 0001-PCI-pciehp-Differentiate-between-surprise-and-safe-r.patch
 
 %description
 The kernel package contains the Linux kernel (vmlinuz), the core of any
