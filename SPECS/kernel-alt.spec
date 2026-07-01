@@ -750,6 +750,8 @@ Source5: prepare-build
 # kernel-alt specific patches
 Patch2000: 0001-tools-perf-define-__ALIGN_KERNEL-missing-macro.patch
 
+Patch2001: 0001-PCI-pciehp-Tolerate-Presence-Detect-hardwired-to-zer.patch
+
 %description
 The kernel package contains the Linux kernel (vmlinuz), the core of any
 Linux operating system. The kernel handles the basic functions of the operating
